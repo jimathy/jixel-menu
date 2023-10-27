@@ -12,12 +12,14 @@ const openMenu = (data = null) => {
 
     data.forEach((item, index) => {
         if (!item.hidden) {
-            let header = item.header;
-            let message = item.txt || item.text;
+            let header = item.header || item.title;
+            let message = item.txt || item.text || item.description;
             let isMenuHeader = item.isMenuHeader;
             let isDisabled = item.disabled;
             let icon = item.icon;
-            html += getButtonRender(header, message, index, isMenuHeader, isDisabled, icon);
+            let progress = item.progress || item.progressbar;
+            let colour = item.colorScheme;
+            html += getButtonRender(header, message, index, isMenuHeader, isDisabled, icon, progress, colour);
             if (item.params) buttonParams[index] = item.params;
         }
     });
@@ -40,13 +42,23 @@ const openMenu = (data = null) => {
     });
 };
 
-const getButtonRender = (header, message = null, id, isMenuHeader, isDisabled, icon) => {
+const getButtonRender = (header, message = null, id, isMenuHeader, isDisabled, icon, progress, colour) => {
     return `
-        <div class="${isMenuHeader ? "title" : "button"} ${isDisabled ? "disabled" : ""}" id="${id}">
-            <div class="icon"> <img src=${icon} width=30px onerror="this.onerror=null; this.remove();"> <i class="${icon}" onerror="this.onerror=null; this.remove();"></i> </div>
+        <div class="${isMenuHeader ? "title" : "button"} ${isDisabled ? "disabled" : ""} " id="${id}">
+            ${icon ? `
+                <div class="icon">
+                    <img src=${icon} onerror="this.onerror=null; this.remove();">
+                    <i class="${icon}" onerror="this.onerror=null; this.remove();"></i>
+                </div>
+            ` : " " }
             <div class="column">
-            <div class="header"> ${header}</div>
-            ${message ? `<div class="text">${message}</div>` : ""}
+                <div class="header">${header ? `${header}` : " "}</div>
+                ${message ? `<div class="text"> ${message}</div>` : ""}
+                ${progress ? `
+                    <div style="width: 7vw; background-color: #ddd; border-radius: 5px;">
+                        <div style="padding-top: 0.3vh; padding-bottom: 0.3vh; width:${progress}%; background-color:${colour}; border-radius: 5px;"></div>
+                    </div>`
+                : ""}
             </div>
         </div>
     `;

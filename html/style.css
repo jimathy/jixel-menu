@@ -17,7 +17,6 @@
 	height: auto;
 	top: 15%;
 	right: 20%;
-	border-radius: 5px;
 	z-index: 2;
 }
 .button {
@@ -56,13 +55,10 @@ body::-webkit-scrollbar { display: none; }
 	margin: auto;
 	position: relative;
 	top: 10%;
-	margin-top: 0.2rem;
 	overflow: hidden;
 	padding: 0.35rem;
-	border-radius: 10px;
 	display: flex;
 	flex-direction: column;
-	box-shadow: 0rem 0rem 0.1rem 0.05rem #000000;
 	cursor: pointer;
 	border-left: 8px solid rgba(23, 23, 23, 1%);
 	transition-property: color, background-color, border-left;
@@ -115,7 +111,7 @@ body::-webkit-scrollbar { display: none; }
 .title {
 	font-family: var(--font-family);
 	width: auto;
-	max-width: 46%;
+	max-width: 47%;
 	height: 10%;
 	background: rgba(23, 23, 23);
 	border-left: 8px solid rgba(23, 23, 23, 1%);
@@ -124,13 +120,10 @@ body::-webkit-scrollbar { display: none; }
 	margin-left: -0.5;
 	position: relative;
 	top: 10%;
-	margin-top: 0.2rem;
 	overflow: hidden;
 	padding: 0.35rem;
-	border-radius: 10px;
 	flex-direction: column;
 	border-left: 0px;
-	box-shadow: 0rem 0rem 0.1rem 0.05rem #000000;
 }
 
 .title > div.header {
@@ -139,7 +132,6 @@ body::-webkit-scrollbar { display: none; }
 }
 
 .disabled {
-    background: #878789 !important;
     cursor: default;
 }
 
@@ -174,10 +166,9 @@ div > .header {
 	z-index: 1;
 }
 
-
 .search-container input[type="text"] {
     padding: 0.35rem;
-    width: 95%;
+    width: 94%;
     font-size: 1.1rem;
     border: none;
     border-bottom: 2px solid rgba(100, 149, 237, 0.5);
@@ -188,7 +179,3 @@ div > .header {
     outline: none;
     border-bottom: 2px solid rgba(100, 149, 237, 1);
 }
-
-
-
-
