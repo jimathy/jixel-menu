@@ -1,78 +1,157 @@
-# qb-menu
-Menu System for the QBCore Framework, attempted to add inventory images to the buttons
-This is a modified version of **[NH Context](https://forum.cfx.re/t/no-longer-supported-standalone-nerohiro-s-context-menu-dynamic-event-firing-menu/2564083)** by **[NeroHiro](https://github.com/nerohiro)**
+# jixel-menu
+Context Menu System for the QBCore Framework
+This is a modified version of QBCore's QB-Menu
 
 Original made by QBCore, edited by Jimathy
 
-For more releases join Renewed scripts https://discord.gg/NukW4RTF
+Edited again by Jimathy666 and Taylor - https://discord.gg/xKgQZ6wZvS
 
-Edited again by Jimathy666#3450 - https://discord.gg/xKgQZ6wZvS
+---
+### Changes from qb-menu:
+- New theme
+- Support for ox_lib style variables
+    - (eg . `onSelect`, `onExit`, `title`, `description`)
+- Support for progress bars in the buttons
+    - `progress = 80`
+- Search bar
+    - Type anything and it will show only buttons with that string
+---
+### DISCLAIMER:
+### THE SCRIPT NEEDS TO BE STARTED BEFORE `[qb]`
+### It's Recommended to place this script the `[standalone]` folder
 
-### Screenshot of the Edited Menu
-![Example Menu](https://i.imgur.com/GFWRFwC.jpg)
-![Example Menu](https://cdn.discordapp.com/attachments/921124582616879196/968823661559689236/ezgif-4-f6ef4195b8.gif?size=4096)
+### In version 1.1, this script will now try to claim the `qb-menu` export name so no rename is needed.
+---
+### Screenshot of the Menu 
+<img src="https://im4.ezgif.com/tmp/ezgif-4-1226ab16f4.gif"></img>
+![Example Menu](https://media.discordapp.net/attachments/921119357336191007/1167201993933209690/image.png?ex=654d4490&is=653acf90&hm=22cc629064bace97ac70a1098e8fd05647f4fd6215b56a7ea34e3735923adb5b&=&width=355&height=449)
 #
 
---[[
-EXAMPLE MENU
---]]
+# ChangeLog
 
-```
-RegisterCommand("qbmenutest", function(source, args, raw)
-    openMenu({
+### v1.1
+- Added support for `onSelect`
+    - This can be used instead of `params`
+- Support for ox_lib style `title` and `description`
+- Progress Bar support added
+    - In each button you can now add `progress` and optionally `colourScheme`
+    - `colorScheme` adheres to https://v6.mantine.dev/theming/colors/#default-colors
+    - eg `"red.5"` `"green.9"`
+- Script now can be remain named `jixel-menu`
+    - The script will attempt to claim the `qb-menu` export name
+    - You will need to place this into `[standalone]` and then restart your server
+
+### v1.0
+- Added Search bar, using this will show only the buttons with that `"string"`
+
+---
+
+# EXAMPLE MENU
+
+```lua
+RegisterCommand('jixelmenutest', function()
+    exports['qb-menu']:openMenu({
         {
-            header = "Main Title",
+            header = 'QBCore Test Menu',
+            icon = 'fas fa-code',
             isMenuHeader = true, -- Set to true to make a nonclickable title
-            icon = "lockpick", -- Set this to any item named in the shared
         },
         {
-            header = "Sub Menu Button",
-            txt = "This goes to a sub menu",
+            header = 'First Button',
+            txt = 'Print a message!',
+            icon = 'fas fa-code-merge',
+            onSelect = function()
+                TriggerEvent("jixel-menu:client:testButton", { message = 'This was called by clicking a button' })
+            end,
+        },
+        {
+            header = 'Second Button',
+            txt = 'Open a secondary menu!',
+            arrow = true, -- adding this will force an "arrow" icon to appear to imply it leads to another menu
+            -- disabled = false, -- optional, non-clickable and grey scale
+            -- hidden = true, -- optional, hides the button completely
+            progress = 76,
             params = {
-                event = "qb-menu:client:testMenu2",
+                -- isServer = false, -- optional, specify if its a server event or not
+                event = 'jixel-menu:client:subMenu',
                 args = {
-                    number = 1,
+                    number = 2,
                 }
             }
         },
         {
-            header = "Sub Menu Button",
-            txt = "This goes to a sub menu",
-            disabled = true,
-            -- hidden = true, -- doesnt create this at all if set to true
+            title = 'Progress Button',
+            description = 'Example of a Progress Bar!',
+            isMenuHeader = true,
+            -- disabled = false, -- optional, non-clickable and grey scale
+            -- hidden = true, -- optional, hides the button completely
+            progress = 76,
+            colorScheme = "red.6",
             params = {
-                event = "qb-menu:client:testMenu2",
+                -- isServer = false, -- optional, specify if its a server event or not
+                event = 'jixel-menu:client:subMenu',
                 args = {
-                    number = 1,
+                    number = 2,
                 }
             }
         },
-    })
+    }, { canClose = true, onExit = function() print("onExit triggered") end, onBack = function() print("onBack triggered") end, })
 end)
-```
-```
-RegisterNetEvent('qb-menu:client:testMenu2', function(data)
+
+RegisterNetEvent('jixel-menu:client:subMenu', function(data)
     local number = data.number
-    openMenu({
+    exports['qb-menu']:openMenu({
         {
-            header = "< Go Back",
+            header = 'Return to main menu',
+            icon = 'fas fa-backward',
+            onSelect = function()
+                TriggerEvent("jixel-menu:client:mainMenu", {})
+            end,
         },
         {
-            header = "Number: "..number,
-            txt = "Other",
-            params = {
-                event = "qb-menu:client:testButton",
-                args = {
-                    message = "This was called by clicking this button"
-                }
-            }
-        },
+            header = 'Sub-menu button',
+            txt = 'Print a message!',
+            icon = 'fas fa-code-merge',
+            onSelect = function()
+                TriggerEvent("jixel-menu:client:testButton", { message = 'This was called by clicking a button' })
+            end,
+        }
     })
 end)
+
+RegisterNetEvent('jixel-menu:client:mainMenu', function() ExecuteCommand('jixelmenutest') end)
+
+RegisterNetEvent('jixel-menu:client:testButton', function(data) print(data.message) end)
 ```
-```
-RegisterNetEvent('qb-menu:client:testButton', function(data)
-    TriggerEvent('QBCore:Notify', data.message)
+## For loop menu
+```lua
+local staff = { -- our table we will loop through to get button values
+    ['Jimathy'] = 'Script Monkey',
+    ['Taylor'] = 'Script Goblin',
+}
+
+RegisterCommand('jixelmenutable', function()
+    local staffList = {}
+    staffList[#staffList + 1] = { -- create non-clickable header button
+        isMenuHeader = true,
+        header = 'Jixel Test Loop Menu',
+        icon = 'fas fa-infinity'
+    }
+    for k, v in pairs(staff) do -- loop through our table
+        staffList[#staffList + 1] = { -- insert data from our loop into the menu
+            header = k,
+            txt = 'Yeah they are definitely '..v,
+            icon = 'fas fa-face-grin-tears',
+            onSelect = function()
+                TriggerEvent("jixel-menu:client:notify", { name = k, label = v })
+            end,
+        }
+    end
+    exports['qb-menu']:openMenu(staffList) -- open our menu
+end)
+
+RegisterNetEvent('jixel-menu:client:notify', function(data)
+    print('My favorite Jixelpatterns member is the '..data.label..' '..data.name)
 end)
 ```
 
