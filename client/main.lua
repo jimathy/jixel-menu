@@ -44,7 +44,6 @@ local colours = {
 
 -- Functions
 local function openMenu(data, modifiers)
-    print("test")
     if not data or not next(data) then return end
 	for _, v in pairs(data) do
 		if v["icon"] then
